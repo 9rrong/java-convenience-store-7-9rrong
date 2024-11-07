@@ -52,9 +52,9 @@
 ### 입력
 
 - [ ] 사용자가 입력하는 값은 camp.nextstep.edu.missionutils.Console의 readLine()을 활용한다. 
-- [ ] 구현에 필요한 상품 목록과 행사 목록을 파일 입출력을 통해 불러온다.
-  - [ ] src/main/resources/products.md과 src/main/resources/promotions.md 파일을 이용한다.
-  - [ ] 두 파일 모두 내용의 형식을 유지한다면 값은 수정할 수 있다.
+- [x] 구현에 필요한 상품 목록과 행사 목록을 파일 입출력을 통해 불러온다.
+  - [x] src/main/resources/products.md과 src/main/resources/promotions.md 파일을 이용한다.
+  - [x] 두 파일 모두 내용의 형식을 유지한다면 값은 수정할 수 있다.
 - [ ] 구매할 상품과 수량을 입력 받는다. 
   - [ ] 상품명, 수량은 하이픈(-)으로, 개별 상품은 대괄호([])로 묶어 쉼표(,)로 구분한다. (ex. `[콜라-10]`,`[사이다-3]`)
 - [ ] 프로모션 적용이 가능한 상품에 대해 고객이 해당 수량보다 적게 가져온 경우, 그 수량만큼 추가 여부를 입력받는다.
