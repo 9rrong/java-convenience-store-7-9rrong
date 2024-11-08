@@ -22,6 +22,12 @@ public class StoreController {
         List<ProductDTO> productDTOs = inventory.getProductDTO();
         outputView.printProducts(productDTOs);
     }
+
+    private List<PurchaseDTO> readPurchases() {
+        String input = inputView.readItem();
+        return inputConverter.convertToPurchaseDTOs(input);
+    }
+
     private <T> T retryUntilValid(Supplier<T> supplier) {
         while (true) {
             try {
