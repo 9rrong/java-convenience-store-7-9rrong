@@ -1,21 +1,25 @@
 package store.model.product;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import store.dto.ProductDTO;
+import store.model.dataloader.AbstractDataLoader;
 
 public class Products {
     private final List<Product> products;
+    private final AbstractDataLoader<ProductDTO> productDataLoader;
 
-    private Products(List<Product> products) {
-        this.products = products;
+    public Products(AbstractDataLoader<ProductDTO> productDataLoader) {
+        this.productDataLoader = productDataLoader;
+        this.products = loadInitialProducts();
     }
 
-    public static Products valueOf(List<ProductDTO> productDTOs) {
+    public static List<Product> valueOf(List<ProductDTO> productDTOs) {
 
-        return new Products(productDTOs
+        return productDTOs
                 .stream()
                 .map(Product::valueOf)
-                .toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public List<ProductDTO> getProductDTOs() {
@@ -23,6 +27,10 @@ public class Products {
         return products
                 .stream()
                 .map(Product::toDTO)
-                .toList();
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    private List<Product> loadInitialProducts() {
+        return valueOf(productDataLoader.loadFromFile());
     }
 }

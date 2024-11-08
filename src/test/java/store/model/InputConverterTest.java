@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
-import store.dto.PurchaseDTO;
+import store.dto.OrderDTO;
 
 class InputConverterTest {
 
@@ -24,7 +24,7 @@ class InputConverterTest {
     void 정상_입력_테스트() {
         String input = "[콜라-10],[사이다-3],[오렌지주스-5]";
 
-        List<PurchaseDTO> purchases = inputConverter.convertToPurchaseDTOs(input);
+        List<OrderDTO> purchases = inputConverter.convertToOrderDTOs(input);
 
         assertEquals(3, purchases.size());
         assertEquals("콜라", purchases.get(0).productName());
@@ -46,7 +46,7 @@ class InputConverterTest {
     })
     void 잘못된_입력_예외_테스트(String input) {
         assertThrows(IllegalArgumentException.class, () -> {
-            inputConverter.convertToPurchaseDTOs(input);
+            inputConverter.convertToOrderDTOs(input);
         });
     }
 
@@ -54,7 +54,7 @@ class InputConverterTest {
     @NullAndEmptySource
     void 빈_입력_예외_테스트(String input) {
         assertThrows(IllegalArgumentException.class, () -> {
-            inputConverter.convertToPurchaseDTOs(input);
+            inputConverter.convertToOrderDTOs(input);
         });
     }
 }

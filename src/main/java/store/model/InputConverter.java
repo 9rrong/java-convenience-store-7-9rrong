@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import store.dto.PurchaseDTO;
+import store.dto.OrderDTO;
 
 public class InputConverter {
 
     public static final String ITEMS_DELIMITER = ",";
     public static final String ITEM_DELIMITER = "-";
 
-    public List<PurchaseDTO> convertToPurchaseDTOs(String input) {
-        List<PurchaseDTO> purchases = new ArrayList<>();
+    public List<OrderDTO> convertToOrderDTOs(String input) {
+        List<OrderDTO> orderDTOS = new ArrayList<>();
         Set<String> productNames = new HashSet<>();
 
         validateNonEmptyFormat(input);
@@ -38,13 +38,13 @@ public class InputConverter {
 
             try {
                 int quantity = Integer.parseInt(quantityStr);
-                purchases.add(new PurchaseDTO(productName, quantity));
+                orderDTOS.add(new OrderDTO(productName, quantity));
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException(ErrorCode.GENERAL_INVALID_INPUT.getMessage());
             }
         }
 
-        return purchases;
+        return orderDTOS;
     }
 
     private void validateUniqueProductName(Set<String> productNames, String productName) {
