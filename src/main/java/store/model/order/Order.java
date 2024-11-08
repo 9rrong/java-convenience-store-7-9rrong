@@ -30,7 +30,7 @@ public class Order {
                 .orElseThrow(() -> new IllegalArgumentException(ErrorCode.PRODUCT_NOT_FOUND.getMessage()));
 
         if (quantity > product.quantity()) {
-            throw new IllegalArgumentException(ErrorCode.QUANTITY_EXCEEDS_INVENTORY.getMessage());
+            throw new IllegalArgumentException(ErrorCode.QUANTITY_EXCEEDS_STOCK.getMessage());
         }
     }
 }

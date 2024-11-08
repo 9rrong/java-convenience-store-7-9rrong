@@ -51,6 +51,6 @@ class OrderTest {
         Executable executable = () -> Order.fromDTO(orderDTO, availableProducts);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, executable);
-        assertEquals(ErrorCode.QUANTITY_EXCEEDS_INVENTORY.getMessage(), exception.getMessage());
+        assertEquals(ErrorCode.QUANTITY_EXCEEDS_STOCK.getMessage(), exception.getMessage());
     }
 }
