@@ -1,7 +1,9 @@
 package store.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import store.dto.PurchaseDTO;
 
 public class InputConverter {
@@ -11,6 +13,7 @@ public class InputConverter {
 
     public List<PurchaseDTO> convertToPurchaseDTOs(String input) {
         List<PurchaseDTO> purchases = new ArrayList<>();
+        Set<String> productNames = new HashSet<>();
 
         validateNonEmptyFormat(input);
 
@@ -31,6 +34,8 @@ public class InputConverter {
 
             validateNonEmptyProductName(productName);
 
+            validateUniqueProductName(productNames, productName);
+
             try {
                 int quantity = Integer.parseInt(quantityStr);
                 purchases.add(new PurchaseDTO(productName, quantity));
@@ -40,6 +45,12 @@ public class InputConverter {
         }
 
         return purchases;
+    }
+
+    private void validateUniqueProductName(Set<String> productNames, String productName) {
+        if (!productNames.add(productName)) {
+            throw new IllegalArgumentException(ErrorCode.GENERAL_INVALID_INPUT.getMessage());
+        }
     }
 
     private void validateNonEmptyProductName(String productName) {
