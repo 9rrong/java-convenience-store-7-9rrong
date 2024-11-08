@@ -1,5 +1,7 @@
 package store.controller;
 
+import java.util.List;
+import store.dto.ProductDTO;
 import store.model.Inventory;
 import store.view.InputView;
 import store.view.OutputView;
@@ -16,6 +18,8 @@ public class StoreController {
     }
 
     public void startStore() {
-
+        outputView.printGreeting();
+        List<ProductDTO> productDTOs = inventory.getProductDTO();
+        outputView.printProducts(productDTOs);
     }
 }

@@ -1,6 +1,5 @@
 package store.model.product;
 
-import java.util.ArrayList;
 import java.util.List;
 import store.dto.ProductDTO;
 
@@ -11,18 +10,19 @@ public class Products {
         this.products = products;
     }
 
-    public static Products valueOf(List<ProductDTO> productDtos) {
-        List<Product> productList = new ArrayList<>();
+    public static Products valueOf(List<ProductDTO> productDTOs) {
 
-        for (ProductDTO productDTO : productDtos) {
-            String name = productDTO.name();
-            int price = productDTO.price();
-            int quantity = productDTO.quantity();
-            String promotion = productDTO.promotion();
+        return new Products(productDTOs
+                .stream()
+                .map(Product::valueOf)
+                .toList());
+    }
 
-            productList.add(new Product(name, price, quantity, promotion));
-        }
+    public List<ProductDTO> getProductDTOs() {
 
-        return new Products(productList);
+        return products
+                .stream()
+                .map(Product::toDTO)
+                .toList();
     }
 }
