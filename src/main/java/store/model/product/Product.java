@@ -15,13 +15,21 @@ public class Product {
         this.promotion = promotion;
     }
 
-    public static Product fromDTO(ProductDTO productDTO) {
-        String name = productDTO.name();
-        int price = productDTO.price();
-        int quantity = productDTO.quantity();
-        String promotion = productDTO.promotion();
+    public boolean isName(String name) {
+        return this.name.equals(name);
+    }
 
-        return new Product(name, price, quantity, promotion);
+    public boolean isQuantityEqualOrGreaterThan(int quantity) {
+        return this.quantity >= quantity;
+    }
+
+    public static Product fromDTO(ProductDTO productDTO) {
+        return new Product(
+                productDTO.name(),
+                productDTO.price(),
+                productDTO.quantity(),
+                productDTO.promotion()
+        );
     }
 
     public ProductDTO toDTO() {
