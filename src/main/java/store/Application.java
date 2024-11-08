@@ -2,9 +2,9 @@ package store;
 
 import store.controller.StoreController;
 import store.model.InputConverter;
-import store.model.product.Products;
 import store.model.dataloader.ProductDataLoader;
 import store.model.dataloader.PromotionDataLoader;
+import store.model.product.Products;
 import store.view.InputView;
 import store.view.OutputView;
 
@@ -19,6 +19,6 @@ public class Application {
 
         StoreController storeController = new StoreController(inputView, outputView, inputConverter, products);
 
-        storeController.startStore();
+        storeController.operate();
     }
 }

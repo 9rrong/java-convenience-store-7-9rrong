@@ -15,7 +15,6 @@ public class Products {
     }
 
     public static List<Product> valueOf(List<ProductDTO> productDTOs) {
-
         return productDTOs
                 .stream()
                 .map(Product::valueOf)
@@ -23,7 +22,6 @@ public class Products {
     }
 
     public List<ProductDTO> getProductDTOs() {
-
         return products
                 .stream()
                 .map(Product::toDTO)

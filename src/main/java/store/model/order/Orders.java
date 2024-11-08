@@ -2,6 +2,7 @@ package store.model.order;
 
 import java.util.List;
 import store.dto.OrderDTO;
+import store.dto.ProductDTO;
 
 public class Orders {
 
@@ -11,10 +12,10 @@ public class Orders {
         this.orders = orders;
     }
 
-    public static Orders valueOf(List<OrderDTO> orderDTOs) {
+    public static Orders valueOf(List<OrderDTO> orderDTOs, List<ProductDTO> availableProducts) {
         return new Orders(orderDTOs
                 .stream()
-                .map(Order::valueOf)
+                .map(orderDTO -> Order.createOrder(orderDTO, availableProducts))
                 .toList());
     }
 }
