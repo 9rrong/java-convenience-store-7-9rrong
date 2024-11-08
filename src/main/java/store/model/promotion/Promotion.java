@@ -1,5 +1,6 @@
 package store.model.promotion;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDateTime;
 import store.dto.PromotionDTO;
 
@@ -20,12 +21,22 @@ public class Promotion {
     }
 
     public static Promotion fromDTO(PromotionDTO promotionDTO) {
-        String name = promotionDTO.name();
-        int buy = promotionDTO.buy();
-        int get = promotionDTO.get();
-        LocalDateTime startDate = promotionDTO.startDate();
-        LocalDateTime endDate = promotionDTO.endDate();
 
-        return new Promotion(name, buy, get, startDate, endDate);
+        return new Promotion(
+                promotionDTO.name(),
+                promotionDTO.buy(),
+                promotionDTO.get(),
+                promotionDTO.startDate(),
+                promotionDTO.endDate()
+        );
+    }
+
+    public boolean isName(String name) {
+        return this.name.equals(name);
+    }
+
+    public boolean isNowAvailable() {
+        LocalDateTime now = DateTimes.now();
+        return !now.isBefore(startDate) && !now.isAfter(endDate);
     }
 }

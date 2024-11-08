@@ -7,6 +7,7 @@ import store.dto.ProductDTO;
 import store.model.InputConverter;
 import store.model.order.Orders;
 import store.model.product.Products;
+import store.model.promotion.Promotions;
 import store.view.InputView;
 import store.view.OutputView;
 
@@ -15,18 +16,23 @@ public class StoreController {
     private final OutputView outputView;
     private final InputConverter inputConverter;
     private final Products products;
+    private final Promotions promotions;
 
-    public StoreController(InputView inputView, OutputView outputView, InputConverter inputConverter,
-                           Products products) {
+    public StoreController(InputView inputView,
+                           OutputView outputView,
+                           InputConverter inputConverter,
+                           Products products,
+                           Promotions promotions) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.inputConverter = inputConverter;
         this.products = products;
+        this.promotions = promotions;
     }
 
     public void operate() {
         outputView.printGreeting();
-        List<ProductDTO> productDTOs = products.getProductDTOs();
+        List<ProductDTO> productDTOs = products.toDTOs();
         outputView.printProducts(productDTOs);
 
         Orders orders = retryUntilValid(() -> createOrders(productDTOs));
