@@ -15,7 +15,7 @@ public class Product {
         this.promotion = promotion;
     }
 
-    public static Product valueOf(ProductDTO productDTO) {
+    public static Product fromDTO(ProductDTO productDTO) {
         String name = productDTO.name();
         int price = productDTO.price();
         int quantity = productDTO.quantity();

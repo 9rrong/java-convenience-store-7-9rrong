@@ -12,10 +12,10 @@ public class Orders {
         this.orders = orders;
     }
 
-    public static Orders valueOf(List<OrderDTO> orderDTOs, List<ProductDTO> availableProducts) {
+    public static Orders fromDTOs(List<OrderDTO> orderDTOs, List<ProductDTO> availableProducts) {
         return new Orders(orderDTOs
                 .stream()
-                .map(orderDTO -> Order.createOrder(orderDTO, availableProducts))
+                .map(orderDTO -> Order.fromDTO(orderDTO, availableProducts))
                 .toList());
     }
 }

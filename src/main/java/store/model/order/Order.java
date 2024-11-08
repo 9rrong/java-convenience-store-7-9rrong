@@ -14,7 +14,7 @@ public class Order {
         this.quantity = quantity;
     }
 
-    public static Order createOrder(OrderDTO orderDTO, List<ProductDTO> availableProducts) {
+    public static Order fromDTO(OrderDTO orderDTO, List<ProductDTO> availableProducts) {
         String name = orderDTO.productName();
         int quantity = orderDTO.quantity();
 

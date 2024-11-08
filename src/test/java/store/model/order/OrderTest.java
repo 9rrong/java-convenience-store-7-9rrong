@@ -21,7 +21,7 @@ class OrderTest {
                 new ProductDTO("사이다", 1300, 15, "1+1")
         );
 
-        Order order = Order.createOrder(orderDTO, availableProducts);
+        Order order = Order.fromDTO(orderDTO, availableProducts);
 
         assertNotNull(order);
     }
@@ -34,7 +34,7 @@ class OrderTest {
                 new ProductDTO("사이다", 1300, 15, "1+1")
         );
 
-        Executable executable = () -> Order.createOrder(orderDTO, availableProducts);
+        Executable executable = () -> Order.fromDTO(orderDTO, availableProducts);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, executable);
         assertEquals(ErrorCode.PRODUCT_NOT_FOUND.getMessage(), exception.getMessage());
@@ -48,7 +48,7 @@ class OrderTest {
                 new ProductDTO("사이다", 1300, 15, "1+1")
         );
 
-        Executable executable = () -> Order.createOrder(orderDTO, availableProducts);
+        Executable executable = () -> Order.fromDTO(orderDTO, availableProducts);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, executable);
         assertEquals(ErrorCode.QUANTITY_EXCEEDS_INVENTORY.getMessage(), exception.getMessage());

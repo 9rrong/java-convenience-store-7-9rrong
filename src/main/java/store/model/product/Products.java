@@ -14,10 +14,10 @@ public class Products {
         this.products = loadInitialProducts();
     }
 
-    public static List<Product> valueOf(List<ProductDTO> productDTOs) {
+    private static List<Product> fromDTOs(List<ProductDTO> productDTOs) {
         return productDTOs
                 .stream()
-                .map(Product::valueOf)
+                .map(Product::fromDTO)
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -29,6 +29,6 @@ public class Products {
     }
 
     private List<Product> loadInitialProducts() {
-        return valueOf(productDataLoader.loadFromFile());
+        return fromDTOs(productDataLoader.loadFromFile());
     }
 }

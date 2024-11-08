@@ -35,7 +35,7 @@ public class StoreController {
     private Orders createOrders(List<ProductDTO> productDTOs) {
         String input = inputView.readItem();
         List<OrderDTO> orderDTOs = inputConverter.convertToOrderDTOs(input);
-        return Orders.valueOf(orderDTOs, productDTOs);
+        return Orders.fromDTOs(orderDTOs, productDTOs);
     }
 
     private <T> T retryUntilValid(Supplier<T> supplier) {
