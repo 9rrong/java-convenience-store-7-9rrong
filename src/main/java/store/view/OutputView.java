@@ -20,6 +20,10 @@ public class OutputView {
         }
     }
 
+    public void printError(String message) {
+        System.out.println(message);
+    }
+
     private String buildProductString(ProductDTO productDTO) {
         String name = productDTO.name();
         int price = productDTO.price();
