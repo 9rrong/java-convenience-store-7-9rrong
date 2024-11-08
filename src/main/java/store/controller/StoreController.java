@@ -3,9 +3,9 @@ package store.controller;
 import java.util.List;
 import java.util.function.Supplier;
 import store.dto.ProductDTO;
-import store.dto.PurchaseDTO;
+import store.dto.OrderDTO;
 import store.model.InputConverter;
-import store.model.Inventory;
+import store.model.product.Products;
 import store.view.InputView;
 import store.view.OutputView;
 
@@ -13,28 +13,28 @@ public class StoreController {
     private final InputView inputView;
     private final OutputView outputView;
     private final InputConverter inputConverter;
-    private final Inventory inventory;
+    private final Products products;
 
     public StoreController(InputView inputView, OutputView outputView, InputConverter inputConverter,
-                           Inventory inventory) {
+                           Products products) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.inputConverter = inputConverter;
-        this.inventory = inventory;
+        this.products = products;
     }
 
     public void startStore() {
         outputView.printGreeting();
-        List<ProductDTO> productDTOs = inventory.getProductDTO();
+        List<ProductDTO> productDTOs = products.getProductDTOs();
         outputView.printProducts(productDTOs);
 
-        List<PurchaseDTO> purchaseDTOs = retryUntilValid(this::readPurchases);
+        List<OrderDTO> orderDTOs = retryUntilValid(this::readOrders);
 
     }
 
-    private List<PurchaseDTO> readPurchases() {
+    private List<OrderDTO> readOrders() {
         String input = inputView.readItem();
-        return inputConverter.convertToPurchaseDTOs(input);
+        return inputConverter.convertToOrderDTOs(input);
     }
 
     private <T> T retryUntilValid(Supplier<T> supplier) {
