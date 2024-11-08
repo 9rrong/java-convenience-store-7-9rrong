@@ -17,6 +17,10 @@ public class ProductDataLoader extends AbstractDataLoader<ProductDTO> {
             int quantity = Integer.parseInt(fields[2].trim());
             String promotion = fields[3].trim();
 
+            if ("null".equals(promotion)) {
+                promotion = null;
+            }
+
             return new ProductDTO(name, price, quantity, promotion);
         }
         throw new IllegalArgumentException("[ERROR] 초기 데이터가 잘못된 형식입니다.");
