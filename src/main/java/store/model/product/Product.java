@@ -23,6 +23,10 @@ public class Product {
         return this.quantity >= quantity;
     }
 
+    public void reduceQuantity(int quantity) {
+        this.quantity -= quantity;
+    }
+
     public static Product fromDTO(ProductDTO productDTO) {
         return new Product(
                 productDTO.name(),

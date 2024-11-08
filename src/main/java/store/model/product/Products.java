@@ -35,6 +35,13 @@ public class Products {
                 .orElse(false);
     }
 
+    public void reduceStock(String productName, int quantity) {
+        Product product = findProductByName(productName)
+                .orElseThrow(() -> new IllegalArgumentException(ErrorCode.PRODUCT_NOT_FOUND.getMessage()));
+
+        product.reduceQuantity(quantity);
+    }
+
     private List<Product> loadInitialProducts() {
         return fromDTOs(productDataLoader.loadFromFile());
     }
