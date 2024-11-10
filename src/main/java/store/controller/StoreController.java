@@ -69,7 +69,9 @@ public class StoreController {
             }
         }
 
-        return new ReceiptDTO(nonPromotionOrders, promotionOrders);
+        boolean applyMembershipDiscount = askMembershipDiscount();
+
+        return new ReceiptDTO(nonPromotionOrders, promotionOrders, applyMembershipDiscount);
     }
 
     private void processPromotionOrder(OrderDTO orderDTO, List<OrderDTO> promotionOrders) {
@@ -101,6 +103,10 @@ public class StoreController {
     private boolean askBuyOnlyPromotionProduct(String productName, int nonPromotionQuantity) {
         return inputConverter.convertToBoolean(
                 inputView.promptBuyOnlyPromotionProduct(productName, nonPromotionQuantity));
+    }
+
+    private boolean askMembershipDiscount() {
+        return inputConverter.convertToBoolean(inputView.promptMembershipDiscount());
     }
 
     private <T> T retryUntilValid(Supplier<T> supplier) {
