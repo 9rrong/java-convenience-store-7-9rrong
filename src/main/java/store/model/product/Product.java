@@ -8,23 +8,11 @@ public class Product {
     private int quantity;
     private final String promotion;
 
-    private Product(String name, int price, int quantity, String promotion) {
+    public Product(String name, int price, int quantity, String promotion) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
         this.promotion = promotion;
-    }
-
-    public boolean isName(String name) {
-        return this.name.equals(name);
-    }
-
-    public boolean isQuantityEqualOrGreaterThan(int quantity) {
-        return this.quantity >= quantity;
-    }
-
-    public void reduceQuantity(int quantity) {
-        this.quantity -= quantity;
     }
 
     public static Product fromDTO(ProductDTO productDTO) {
@@ -38,5 +26,21 @@ public class Product {
 
     public ProductDTO toDTO() {
         return new ProductDTO(name, price, quantity, promotion);
+    }
+
+    public boolean hasName(String name) {
+        return this.name.equals(name);
+    }
+
+    public boolean hasPromotion() {
+        return this.promotion != null;
+    }
+
+    public String getPromotion() {
+        return this.promotion;
+    }
+
+    public int getQuantity(){
+        return this.quantity;
     }
 }
