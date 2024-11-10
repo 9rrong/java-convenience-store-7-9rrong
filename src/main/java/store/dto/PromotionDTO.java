@@ -1,12 +1,12 @@
 package store.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record PromotionDTO(
         String name,
         int buy,
         int get,
-        LocalDateTime startDate,
-        LocalDateTime endDate
+        LocalDate startDate,
+        LocalDate endDate
 ) {
 }
