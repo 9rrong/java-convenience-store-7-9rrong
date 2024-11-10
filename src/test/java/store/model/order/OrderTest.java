@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import store.dto.OrderDTO;
@@ -36,7 +37,7 @@ class OrderTest {
 
         Executable executable = () -> Order.fromDTO(orderDTO, availableProducts);
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, executable);
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class, executable);
         assertEquals(ErrorCode.PRODUCT_NOT_FOUND.getMessage(), exception.getMessage());
     }
 
