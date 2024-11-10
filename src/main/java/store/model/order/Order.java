@@ -1,17 +1,22 @@
 package store.model.order;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import store.dto.OrderDTO;
 import store.dto.ProductDTO;
 import store.model.ErrorCode;
 
 public class Order {
-    private final String name;
-    private final int quantity;
+    private final String productName;
+    private int quantity;
 
-    private Order(String name, int quantity) {
-        this.name = name;
+    private Order(String productName, int quantity) {
+        this.productName = productName;
         this.quantity = quantity;
+    }
+
+    public OrderDTO toDTO() {
+        return new OrderDTO(productName, quantity);
     }
 
     public static Order fromDTO(OrderDTO orderDTO, List<ProductDTO> availableProducts) {
@@ -24,12 +29,20 @@ public class Order {
     }
 
     private static void validateOrder(String productName, int quantity, List<ProductDTO> availableProducts) {
-        ProductDTO product = availableProducts.stream()
-                .filter(p -> p.name().equals(productName))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(ErrorCode.PRODUCT_NOT_FOUND.getMessage()));
 
-        if (quantity > product.quantity()) {
+        List<ProductDTO> filteredDTOs = availableProducts.stream()
+                .filter(p -> p.name().equals(productName))
+                .toList();
+
+        if (filteredDTOs.isEmpty()) {
+            throw new NoSuchElementException(ErrorCode.PRODUCT_NOT_FOUND.getMessage());
+        }
+
+        int availableQuantity = filteredDTOs
+                .stream()
+                .mapToInt(ProductDTO::quantity).sum();
+
+        if (quantity > availableQuantity) {
             throw new IllegalArgumentException(ErrorCode.QUANTITY_EXCEEDS_STOCK.getMessage());
         }
     }

@@ -1,6 +1,7 @@
 package store.model.order;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import store.dto.OrderDTO;
 import store.dto.ProductDTO;
 
@@ -17,5 +18,11 @@ public class Orders {
                 .stream()
                 .map(orderDTO -> Order.fromDTO(orderDTO, availableProducts))
                 .toList());
+    }
+
+    public List<OrderDTO> getOrderDTOs() {
+        return orders.stream()
+                .map(Order::toDTO)
+                .collect(Collectors.toUnmodifiableList());
     }
 }
