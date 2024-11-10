@@ -6,6 +6,7 @@ import store.model.dataloader.ProductDataLoader;
 import store.model.dataloader.PromotionDataLoader;
 import store.model.product.Products;
 import store.model.promotion.Promotions;
+import store.service.DiscountService;
 import store.view.InputView;
 import store.view.OutputView;
 
@@ -18,14 +19,15 @@ public class Application {
         Promotions promotions = Promotions.withLoaders(promotionDataLoader);
         Products products = Products.withLoader(productDataLoader);
         InputConverter inputConverter = new InputConverter();
+        DiscountService discountService = new DiscountService(products, promotions);
 
-        StoreController storeController = new StoreController(inputView, outputView, inputConverter, products, promotions);
         StoreController storeController = new StoreController(
                 inputView,
                 outputView,
                 inputConverter,
                 products,
                 promotions,
+                discountService
         );
 
         storeController.operate();
