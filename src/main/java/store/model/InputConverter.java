@@ -47,6 +47,13 @@ public class InputConverter {
         return orderDTOS;
     }
 
+    public boolean convertToBoolean(String input) {
+        if (!input.equals("Y") && !input.equals("N")) {
+            throw new IllegalArgumentException(ErrorCode.GENERAL_INVALID_INPUT.getMessage());
+        }
+        return input.equals("Y");
+    }
+
     private void validateUniqueProductName(Set<String> productNames, String productName) {
         if (!productNames.add(productName)) {
             throw new IllegalArgumentException(ErrorCode.GENERAL_INVALID_INPUT.getMessage());
