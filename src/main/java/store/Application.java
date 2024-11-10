@@ -15,11 +15,18 @@ public class Application {
         OutputView outputView = new OutputView();
         ProductDataLoader productDataLoader = new ProductDataLoader("products.md");
         PromotionDataLoader promotionDataLoader = new PromotionDataLoader("promotions.md");
-        Promotions promotions = new Promotions(promotionDataLoader);
-        Products products = new Products(productDataLoader);
+        Promotions promotions = Promotions.withLoaders(promotionDataLoader);
+        Products products = Products.withLoader(productDataLoader);
         InputConverter inputConverter = new InputConverter();
 
         StoreController storeController = new StoreController(inputView, outputView, inputConverter, products, promotions);
+        StoreController storeController = new StoreController(
+                inputView,
+                outputView,
+                inputConverter,
+                products,
+                promotions,
+        );
 
         storeController.operate();
     }

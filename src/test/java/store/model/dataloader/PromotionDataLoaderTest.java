@@ -23,15 +23,15 @@ class PromotionDataLoaderTest {
         assertEquals("탄산2+1", firstPromotion.name());
         assertEquals(2, firstPromotion.buy());
         assertEquals(1, firstPromotion.get());
-        assertEquals(LocalDate.of(2024, 1, 1).atStartOfDay(), firstPromotion.startDate());
-        assertEquals(LocalDate.of(2024, 12, 31).atStartOfDay(), firstPromotion.endDate());
+        assertEquals(LocalDate.of(2024, 1, 1), firstPromotion.startDate());
+        assertEquals(LocalDate.of(2024, 12, 31), firstPromotion.endDate());
 
         PromotionDTO secondPromotion = promotions.get(1);
         assertEquals("MD추천상품", secondPromotion.name());
         assertEquals(1, secondPromotion.buy());
         assertEquals(1, secondPromotion.get());
-        assertEquals(LocalDate.of(2024, 2, 1).atStartOfDay(), secondPromotion.startDate());
-        assertEquals(LocalDate.of(2024, 6, 30).atStartOfDay(), secondPromotion.endDate());
+        assertEquals(LocalDate.of(2024, 2, 1), secondPromotion.startDate());
+        assertEquals(LocalDate.of(2024, 6, 30), secondPromotion.endDate());
     }
 
     @Test

@@ -22,7 +22,7 @@ public class PromotionDataLoader extends AbstractDataLoader<PromotionDTO> {
             LocalDate startDate = LocalDate.parse(fields[3].trim(), DATE_FORMAT);
             LocalDate endDate = LocalDate.parse(fields[4].trim(), DATE_FORMAT);
 
-            return new PromotionDTO(name, buy, get, startDate.atStartOfDay(), endDate.atStartOfDay());
+            return new PromotionDTO(name, buy, get, startDate, endDate);
         }
         throw new IllegalArgumentException("[ERROR] 초기 데이터가 잘못된 형식입니다.");
     }
