@@ -36,14 +36,18 @@ public class StoreController {
     }
 
     public void operate() {
-        outputView.printGreeting();
-        List<ProductDTO> productDTOs = products.toDTOs();
-        outputView.printProducts(productDTOs);
+        boolean operate = true;
+        while(operate) {
+            outputView.printGreeting();
+            List<ProductDTO> productDTOs = products.toDTOs();
+            outputView.printProducts(productDTOs);
 
-        Orders orders = retryUntilValid(() -> createOrders(productDTOs));
-        Receipt receipt = processOrders(orders);
+            Orders orders = retryUntilValid(() -> createOrders(productDTOs));
+            Receipt receipt = processOrders(orders);
 
-        outputView.printReceipt(receipt.generateReceipt());
+            outputView.printReceipt(receipt.generateReceipt());
+            operate = askBuyMoreProduct();
+        }
     }
 
     private Orders createOrders(List<ProductDTO> productDTOs) {
@@ -140,6 +144,10 @@ public class StoreController {
 
     private boolean askMembershipDiscount() {
         return retryUntilValid(() -> inputConverter.convertToBoolean(inputView.promptMembershipDiscount()));
+    }
+
+    private boolean askBuyMoreProduct() {
+        return retryUntilValid(() -> inputConverter.convertToBoolean(inputView.promptBuyMoreProducts()));
     }
 
     private <T> T retryUntilValid(Supplier<T> supplier) {
