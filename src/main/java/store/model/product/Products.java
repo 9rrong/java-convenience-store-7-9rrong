@@ -35,9 +35,29 @@ public class Products {
     }
 
     private static List<Product> fromDTOs(List<ProductDTO> productDTOs) {
-        return productDTOs
-                .stream()
+        Map<String, List<ProductDTO>> productDTOsByName = productDTOs.stream()
+                .collect(Collectors.groupingBy(ProductDTO::name));
+
+        productDTOsByName.values().forEach(products -> {
+            boolean hasNonPromotionProduct = products.stream()
+                    .anyMatch(productDTO -> productDTO.promotion() == null);
+
+            if (!hasNonPromotionProduct) {
+                ProductDTO firstProductDTO = products.getFirst();
+                ProductDTO nonPromotionProductDTO = new ProductDTO(
+                        firstProductDTO.name(),
+                        firstProductDTO.price(),
+                        0,
+                        null
+                );
+                products.add(nonPromotionProductDTO);
+            }
+        });
+
+        return productDTOsByName.values().stream()
+                .flatMap(List::stream)
                 .map(Product::fromDTO)
                 .collect(Collectors.toUnmodifiableList());
     }
+
 }

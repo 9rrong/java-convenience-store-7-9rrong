@@ -1,6 +1,8 @@
 package store.view;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import store.dto.ProductDTO;
 
 public class OutputView {
@@ -24,20 +26,23 @@ public class OutputView {
         System.out.println(message);
     }
 
+
     private String buildProductString(ProductDTO productDTO) {
         String name = productDTO.name();
         int price = productDTO.price();
         int quantity = productDTO.quantity();
         String promotion = productDTO.promotion();
 
+        String formattedPrice = NumberFormat.getNumberInstance(Locale.KOREA).format(price);
+
         if (quantity == 0) {
-            return "- " + name + " " + price + "원 재고 없음";
+            return "- " + name + " " + formattedPrice + "원 재고 없음";
         }
 
         if (promotion == null) {
-            return "- " + name + " " + price + "원 " + quantity + "개";
+            return "- " + name + " " + formattedPrice + "원 " + quantity + "개";
         }
 
-        return "- " + name + " " + price + "원 " + quantity + "개 " + promotion;
+        return "- " + name + " " + formattedPrice + "원 " + quantity + "개 " + promotion;
     }
 }
