@@ -21,25 +21,26 @@ public class Receipt {
         int totalAmount = 0;
         int totalQuantity = 0;
         int promotionDiscount = 0;
-        int membershipDiscount  = 0;
+        int membershipDiscount = 0;
 
         receipt.add("==============W 편의점================");
-        receipt.add("상품명\t\t수량\t금액");
+        receipt.add(String.format("%-20s%-10s%-15s", "상품명", "수량", "금액"));
 
         for (ReceiptProductDTO receiptProductDTO : totalOrders) {
             int productPrice = receiptProductDTO.price();
             int totalOrderAmount = receiptProductDTO.quantity() * productPrice;
             totalAmount += totalOrderAmount;
             totalQuantity += receiptProductDTO.quantity();
-            receipt.add(receiptProductDTO.name() + "\t\t" + receiptProductDTO.quantity() + "\t" + String.format("%,d",
-                    totalOrderAmount));
+
+            receipt.add(String.format("%-20s%,-10d%,-15d", receiptProductDTO.name(), receiptProductDTO.quantity(), totalOrderAmount));
         }
 
-        receipt.add("=============증	정===============");
+        receipt.add("=============증\t    정===============");
+
         for (ReceiptProductDTO promotionOrder : promotionOrders) {
-            receipt.add(promotionOrder.name() + "\t\t" + promotionOrder.quantity());
-            int promotionAmount = (promotionOrder.quantity() * promotionOrder.price());
+            int promotionAmount = promotionOrder.quantity() * promotionOrder.price();
             promotionDiscount += promotionAmount;
+            receipt.add(String.format("%-20s%,-10d", promotionOrder.name(), promotionOrder.quantity()));
         }
 
         if (applyMembershipDiscount) {
@@ -47,12 +48,12 @@ public class Receipt {
         }
 
         receipt.add("====================================");
-        receipt.add("총구매액\t\t" + totalQuantity + "\t" + String.format("%,d", totalAmount));
-        receipt.add("행사할인\t\t" + String.format("%,d", promotionDiscount));
-        receipt.add("멤버십할인\t\t" + String.format("%,d", membershipDiscount));
+        receipt.add(String.format("%-20s%,-10d%,-15d", "총구매액", totalQuantity, totalAmount));
+        receipt.add(String.format("%-30s%,-10d","행사할인", promotionDiscount));
+        receipt.add(String.format("%-30s%,-10d","멤버십할인", membershipDiscount));
 
         int finalAmount = totalAmount - promotionDiscount - membershipDiscount;
-        receipt.add("내실돈\t\t" + String.format("%,d", finalAmount));
+        receipt.add(String.format("%-30s%,-10d", "내실돈", finalAmount));
 
         return receipt;
     }
