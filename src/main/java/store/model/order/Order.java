@@ -8,7 +8,7 @@ import store.model.ErrorCode;
 
 public class Order {
     private final String productName;
-    private int quantity;
+    private final int quantity;
 
     private Order(String productName, int quantity) {
         this.productName = productName;
@@ -29,7 +29,6 @@ public class Order {
     }
 
     private static void validateOrder(String productName, int quantity, List<ProductDTO> availableProducts) {
-
         List<ProductDTO> filteredDTOs = availableProducts.stream()
                 .filter(p -> p.name().equals(productName))
                 .toList();

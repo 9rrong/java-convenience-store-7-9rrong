@@ -45,4 +45,13 @@ public class Product {
     }
 
     public int getPrice(){return this.price;}
+
+    public void decreaseQuantity(int value){
+        this.quantity -= value;
+    }
+
+    public boolean hasEqualOrMoreQuantityThan(int value) {
+        return quantity >= value;
+    }
+
 }

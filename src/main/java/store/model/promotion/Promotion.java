@@ -12,7 +12,6 @@ public class Promotion {
     private final LocalDate startDate;
     private final LocalDate endDate;
 
-
     public Promotion(String name, int buy, int get, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.buy = buy;
@@ -22,7 +21,6 @@ public class Promotion {
     }
 
     public static Promotion fromDTO(PromotionDTO promotionDTO) {
-
         return new Promotion(
                 promotionDTO.name(),
                 promotionDTO.buy(),
@@ -52,5 +50,4 @@ public class Promotion {
 
         return !now.isBefore(startDateTime) && !now.isAfter(endDateTime);
     }
-
 }

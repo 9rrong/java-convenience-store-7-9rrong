@@ -34,6 +34,27 @@ public class Products {
                 ));
     }
 
+    public void decreaseProductQuantityByName(String name, int quantity) {
+        Product promotionProduct = findProductsByName(name).get(true);
+        Product nonPromotionProduct = findProductsByName(name).get(false);
+
+        if (promotionProduct != null) {
+            int availablePromotionQuantity = promotionProduct.getQuantity();
+            if (promotionProduct.hasEqualOrMoreQuantityThan(quantity)) {
+                promotionProduct.decreaseQuantity(quantity);
+                return;
+            }
+            promotionProduct.decreaseQuantity(availablePromotionQuantity);
+            quantity -= availablePromotionQuantity;
+        }
+
+        if (quantity > 0) {
+            if (nonPromotionProduct.hasEqualOrMoreQuantityThan(quantity)) {
+                nonPromotionProduct.decreaseQuantity(quantity);
+            }
+        }
+    }
+
     private static List<Product> fromDTOs(List<ProductDTO> productDTOs) {
         Map<String, List<ProductDTO>> productDTOsByName = productDTOs.stream()
                 .collect(Collectors.groupingBy(ProductDTO::name));
@@ -59,5 +80,4 @@ public class Products {
                 .map(Product::fromDTO)
                 .collect(Collectors.toUnmodifiableList());
     }
-
 }

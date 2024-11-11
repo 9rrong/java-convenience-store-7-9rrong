@@ -69,7 +69,18 @@ public class StoreController {
         }
 
         boolean applyMembershipDiscount = askMembershipDiscount();
+        updateProducts(totalOrders);
+
         return new Receipt(totalOrders, promotionOrders, applyMembershipDiscount);
+    }
+
+    private void updateProducts(List<ReceiptProductDTO> totalOrders) {
+        for (ReceiptProductDTO order : totalOrders) {
+            String productName = order.name();
+            int quantityToDeduct = order.quantity();
+
+            products.decreaseProductQuantityByName(productName, quantityToDeduct);
+        }
     }
 
     private void processOrderWithPromotion(OrderProcessor orderProcessor, List<ReceiptProductDTO> promotionOrders,
@@ -86,17 +97,8 @@ public class StoreController {
         if (orderProcessor.isEligibleForFreeItems()) {
             handleFreeItemsPromotion(orderProcessor, promotionOrders, totalOrders);
         }
-    }
-
-    private void handleFreeItemsPromotion(OrderProcessor orderProcessor, List<ReceiptProductDTO> promotionOrders,
-                                          List<ReceiptProductDTO> totalOrders) {
         totalOrders.add(orderProcessor.getDefaultOrder());
-
-        if (askAddPromotionProduct(orderProcessor.getProductName())) {
-            promotionOrders.add(orderProcessor.getPromotionAddedOrder());
-            return;
-        }
-        promotionOrders.add(orderProcessor.getPromotionOrder());
+        promotionOrders.add(orderProcessor.getDefaultOrder());
     }
 
     private void handleNonEligiblePromotion(OrderProcessor orderProcessor, List<ReceiptProductDTO> promotionOrders,
@@ -113,6 +115,17 @@ public class StoreController {
         }
 
         totalOrders.add(orderProcessor.getDefaultOrder());
+    }
+
+    private void handleFreeItemsPromotion(OrderProcessor orderProcessor, List<ReceiptProductDTO> promotionOrders,
+                                          List<ReceiptProductDTO> totalOrders) {
+        totalOrders.add(orderProcessor.getDefaultOrder());
+
+        if (askAddPromotionProduct(orderProcessor.getProductName())) {
+            promotionOrders.add(orderProcessor.getPromotionAddedOrder());
+            return;
+        }
+        promotionOrders.add(orderProcessor.getPromotionOrder());
     }
 
     private boolean askAddPromotionProduct(String productName) {
