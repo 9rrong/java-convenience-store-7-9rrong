@@ -1,5 +1,6 @@
 package store.model.promotion;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import store.dto.PromotionDTO;
@@ -44,7 +45,7 @@ public class Promotion {
     }
 
     public boolean isNowAvailable() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = DateTimes.now();
 
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
