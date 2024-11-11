@@ -13,6 +13,7 @@ public class Receipt {
     private static final String RECEIPT_PRICE = "금액";
     private static final int TOTAL_AMOUNT_INDEX = 0;
     private static final int TOTAL_QUANTITY_INDEX = 1;
+    private static final int MAX_MEMBERSHIP_DISCOUNT_AMOUNT = 8000;
 
     private final List<ReceiptProductDTO> totalOrders;
     private final List<ReceiptProductDTO> promotionOrders;
@@ -96,7 +97,8 @@ public class Receipt {
     }
 
     private int calculateMembershipDiscount(int totalAmount, int promotionDiscount) {
-        return (int) ((totalAmount - promotionDiscount) * MEMBERSHIP_DISCOUNT_RATE);
+        int discount = (int) ((totalAmount - promotionDiscount) * MEMBERSHIP_DISCOUNT_RATE);
+        return Math.min(discount, MAX_MEMBERSHIP_DISCOUNT_AMOUNT);
     }
 
     private void addReceiptFooter(List<String> receipt, int totalAmount, int totalQuantity, int promotionDiscount,
