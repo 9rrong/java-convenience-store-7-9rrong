@@ -26,6 +26,11 @@ public class OutputView {
         System.out.println(message);
     }
 
+    public void printReceipt(List<String> receiptLines) {
+        for (String receiptLine : receiptLines) {
+            System.out.println(receiptLine);
+        }
+    }
 
     private String buildProductString(ProductDTO productDTO) {
         String name = productDTO.name();
