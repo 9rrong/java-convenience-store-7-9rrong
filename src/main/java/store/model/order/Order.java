@@ -1,7 +1,6 @@
 package store.model.order;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import store.dto.OrderDTO;
 import store.dto.ProductDTO;
 import store.model.ErrorCode;
@@ -35,7 +34,7 @@ public class Order {
                 .sum();
 
         if (availableQuantity == 0) {
-            throw new NoSuchElementException(ErrorCode.PRODUCT_NOT_FOUND.getMessage());
+            throw new IllegalArgumentException(ErrorCode.PRODUCT_NOT_FOUND.getMessage());
         }
 
         if (quantity > availableQuantity) {
