@@ -17,7 +17,7 @@ class ProductDataLoaderTest {
         productDataLoader = new ProductDataLoader("products.md");
         List<ProductDTO> products = productDataLoader.loadFromFile();
 
-        assertEquals(3, products.size());
+        assertEquals(16, products.size());
 
         ProductDTO firstProduct = products.get(0);
         assertEquals("콜라", firstProduct.name());
@@ -26,16 +26,16 @@ class ProductDataLoaderTest {
         assertEquals("탄산2+1", firstProduct.promotion());
 
         ProductDTO secondProduct = products.get(1);
-        assertEquals("사이다", secondProduct.name());
+        assertEquals("콜라", secondProduct.name());
         assertEquals(1000, secondProduct.price());
-        assertEquals(8, secondProduct.quantity());
+        assertEquals(10, secondProduct.quantity());
         assertNull(secondProduct.promotion());
 
         ProductDTO thirdProduct = products.get(2);
-        assertEquals("오렌지주스", thirdProduct.name());
-        assertEquals(1800, thirdProduct.price());
-        assertEquals(9, thirdProduct.quantity());
-        assertEquals("MD추천상품", thirdProduct.promotion());
+        assertEquals("사이다", thirdProduct.name());
+        assertEquals(1000, thirdProduct.price());
+        assertEquals(8, thirdProduct.quantity());
+        assertEquals("탄산2+1", thirdProduct.promotion());
     }
 
     @Test
