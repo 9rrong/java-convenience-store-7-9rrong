@@ -21,7 +21,7 @@ class InputConverterTest {
     }
 
     @Test
-    void 정상_입력_테스트() {
+    void 정상_입력_변환() {
         String input = "[콜라-10],[사이다-3],[오렌지주스-5]";
 
         List<OrderDTO> purchases = inputConverter.convertToOrderDTOs(input);
@@ -38,6 +38,7 @@ class InputConverterTest {
     @ParameterizedTest
     @CsvSource({
             "'[콜라-abc]'",
+            "'[ -10]",
             "'[콜라-]'",
             "'[콜라--2]'",
             "'[콜라10],[사이다-3]'",
@@ -56,5 +57,46 @@ class InputConverterTest {
         assertThrows(IllegalArgumentException.class, () -> {
             inputConverter.convertToOrderDTOs(input);
         });
+    }
+
+    @Test
+    void 공백_제거_후_상품_변환_테스트() {
+        String input = " [콜라-10], [사이다-3] ";
+
+        List<OrderDTO> purchases = inputConverter.convertToOrderDTOs(input);
+
+        assertEquals(2, purchases.size());
+        assertEquals("콜라", purchases.get(0).productName());
+        assertEquals(10, purchases.get(0).quantity());
+        assertEquals("사이다", purchases.get(1).productName());
+        assertEquals(3, purchases.get(1).quantity());
+    }
+
+    @Test
+    void 단일_상품_주문_테스트() {
+        String input = "[콜라-10]";
+
+        List<OrderDTO> purchases = inputConverter.convertToOrderDTOs(input);
+
+        assertEquals(1, purchases.size());
+        assertEquals("콜라", purchases.get(0).productName());
+        assertEquals(10, purchases.get(0).quantity());
+    }
+
+    @Test
+    void YN_입력_예외_테스트() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            inputConverter.convertToBoolean("A");
+        });
+    }
+
+    @Test
+    void Y입력_테스트() {
+        assertEquals(true, inputConverter.convertToBoolean("Y"));
+    }
+
+    @Test
+    void N입력_테스트() {
+        assertEquals(false, inputConverter.convertToBoolean("N"));
     }
 }
