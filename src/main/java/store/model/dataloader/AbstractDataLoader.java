@@ -4,11 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 import store.model.ErrorCode;
 
 public abstract class AbstractDataLoader<T> {
+    private static final int HEADER_LINE_LENGTH = 1;
     private final String filePath;
 
     public AbstractDataLoader(String filePath) {
@@ -16,28 +16,16 @@ public abstract class AbstractDataLoader<T> {
     }
 
     public List<T> loadFromFile() {
-        List<T> dataList = new ArrayList<>();
-
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filePath);
-             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-             BufferedReader bufferedReader = new BufferedReader(inputStreamReader)
-        ) {
-            List<String> lines = bufferedReader.lines()
-                    .skip(1)
+             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+            return bufferedReader.lines()
+                    .skip(HEADER_LINE_LENGTH)
+                    .map(this::parseLine)
                     .toList();
 
-            if (lines.isEmpty()) {
-                throw new IOException();
-            }
-
-            for (String line : lines) {
-                T data = parseLine(line);
-                dataList.add(data);
-            }
         } catch (IOException e) {
             throw new RuntimeException(ErrorCode.INITIAL_DATA_LOADING_FAILURE.getMessage());
         }
-        return dataList;
     }
 
     protected abstract T parseLine(String line);

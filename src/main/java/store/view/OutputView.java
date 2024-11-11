@@ -1,8 +1,6 @@
 package store.view;
 
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 import store.dto.ProductDTO;
 
 public class OutputView {
@@ -11,13 +9,15 @@ public class OutputView {
     private static final String AVAILABLE_PRODUCTS_MESSAGE = "현재 보유하고 있는 상품입니다." + System.lineSeparator();
     private static final String CURRENCY_FORMAT = "원";
     private static final String QUANTITY_SUFFIX = "개";
-    private static final String PRODUCT_FORMAT_NO_QUANTITY = "- %s %s" + CURRENCY_FORMAT + " 재고 없음";
-    private static final String PRODUCT_FORMAT_NO_PROMOTION = "- %s %s" + CURRENCY_FORMAT + " %d" + QUANTITY_SUFFIX;
+    private static final String NO_STOCK = " 재고 없음";
+    private static final String PRODUCT_FORMAT_NO_QUANTITY = "- %s %,d" + CURRENCY_FORMAT + NO_STOCK;
+    private static final String PRODUCT_FORMAT_NO_PROMOTION = "- %s %,d" + CURRENCY_FORMAT + " %d" + QUANTITY_SUFFIX;
     private static final String PRODUCT_FORMAT_WITH_PROMOTION =
-            "- %s %s" + CURRENCY_FORMAT + " %d" + QUANTITY_SUFFIX + " %s";
+            "- %s %,d" + CURRENCY_FORMAT + " %d" + QUANTITY_SUFFIX + " %s";
     public static final String RECEIPT_STORE_NAME = "==============W 편의점================";
     public static final String RECEIPT_HEADER_FORMAT = "%-20s%-10s%-15s";
     public static final String RECEIPT_PRODUCT_FORMAT = "%-20s%,-10d%,-15d";
+    public static final String RECEIPT_PROMOTION_PRODUCT_FORMAT = "%-20s%,-10d";
     public static final String RECEIPT_PROMOTION_HEADER = "=============증\t    정===============";
     public static final String RECEIPT_FOOTER_FORMAT = "%-30s%,-10d";
     public static final String RECEIPT_TOTAL_LABEL = "총구매액";
@@ -34,7 +34,12 @@ public class OutputView {
         System.out.println(AVAILABLE_PRODUCTS_MESSAGE);
 
         for (ProductDTO productDTO : productDTOS) {
-            System.out.println(buildProductString(productDTO));
+            System.out.println(buildProductString(
+                    productDTO.name(),
+                    productDTO.price(),
+                    productDTO.quantity(),
+                    productDTO.promotion())
+            );
         }
     }
 
@@ -48,22 +53,16 @@ public class OutputView {
         }
     }
 
-    private String buildProductString(ProductDTO productDTO) {
-        String name = productDTO.name();
-        int price = productDTO.price();
-        int quantity = productDTO.quantity();
-        String promotion = productDTO.promotion();
-
-        String formattedPrice = NumberFormat.getNumberInstance(Locale.KOREA).format(price);
+    private String buildProductString(String name, int price, int quantity, String promotion) {
 
         if (quantity == 0) {
-            return String.format(PRODUCT_FORMAT_NO_QUANTITY, name, formattedPrice);
+            return String.format(PRODUCT_FORMAT_NO_QUANTITY, name, price);
         }
 
         if (promotion == null) {
-            return String.format(PRODUCT_FORMAT_NO_PROMOTION, name, formattedPrice, quantity);
+            return String.format(PRODUCT_FORMAT_NO_PROMOTION, name, price, quantity);
         }
 
-        return String.format(PRODUCT_FORMAT_WITH_PROMOTION, name, formattedPrice, quantity, promotion);
+        return String.format(PRODUCT_FORMAT_WITH_PROMOTION, name, price, quantity, promotion);
     }
 }

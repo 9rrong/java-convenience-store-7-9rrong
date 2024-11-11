@@ -26,32 +26,37 @@ public class InputConverter {
 
         validateNonEmptyFormat(input);
 
-        String[] items = input.split(ITEMS_DELIMITER);
-
-        for (String item : items) {
+        for (String item : input.split(ITEMS_DELIMITER)) {
             item = item.trim();
-
             validateItemFormat(item);
 
-            item = item.substring(START_INDEX, item.length() - END_INDEX_OFFSET).trim();
-            String[] parts = item.split(ITEM_DELIMITER);
-
+            String[] parts = item.substring(START_INDEX, item.length() - END_INDEX_OFFSET).trim().split(ITEM_DELIMITER);
             validateProductAndQuantityFormat(parts);
 
             String productName = parts[PRODUCT_NAME_INDEX].trim();
-            String productQuantity = parts[PRODUCT_QUANTITY_INDEX].trim();
-
-            validateNonEmptyProductName(productName);
-            validateUniqueProductName(productNames, productName);
+            validateProductName(productName, productNames);
 
             try {
-                int quantity = Integer.parseInt(productQuantity);
-                orderDTOs.add(new OrderDTO(productName, quantity));
+                orderDTOs.add(new OrderDTO(productName, parseQuantity(parts[PRODUCT_QUANTITY_INDEX].trim())));
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException(ErrorCode.GENERAL_INVALID_INPUT.getMessage());
             }
         }
         return orderDTOs;
+    }
+
+    private void validateProductName(String productName, Set<String> productNames) {
+        validateNonEmptyProductName(productName);
+        validateUniqueProductName(productNames, productName);
+    }
+
+
+    private int parseQuantity(String productQuantity) {
+        try {
+            return Integer.parseInt(productQuantity);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(ErrorCode.GENERAL_INVALID_INPUT.getMessage());
+        }
     }
 
     public boolean convertToBoolean(String input) {

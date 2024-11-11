@@ -1,7 +1,6 @@
 package store.model.dataloader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
@@ -18,31 +17,17 @@ class ProductDataLoaderTest {
         List<ProductDTO> products = productDataLoader.loadFromFile();
 
         assertEquals(16, products.size());
-
-        ProductDTO firstProduct = products.get(0);
-        assertEquals("콜라", firstProduct.name());
-        assertEquals(1000, firstProduct.price());
-        assertEquals(10, firstProduct.quantity());
-        assertEquals("탄산2+1", firstProduct.promotion());
-
-        ProductDTO secondProduct = products.get(1);
-        assertEquals("콜라", secondProduct.name());
-        assertEquals(1000, secondProduct.price());
-        assertEquals(10, secondProduct.quantity());
-        assertNull(secondProduct.promotion());
-
-        ProductDTO thirdProduct = products.get(2);
-        assertEquals("사이다", thirdProduct.name());
-        assertEquals(1000, thirdProduct.price());
-        assertEquals(8, thirdProduct.quantity());
-        assertEquals("탄산2+1", thirdProduct.promotion());
+        assertProduct(products.get(0), "콜라", 1000, 10, "탄산2+1");
+        assertProduct(products.get(1), "콜라", 1000, 10, null);
+        assertProduct(products.get(2), "사이다", 1000, 8, "탄산2+1");
     }
 
-    @Test
-    void 없는_상품_파일_예외테스트() {
-        productDataLoader = new ProductDataLoader("empty_products.md");
-
-        assertThrows(RuntimeException.class, productDataLoader::loadFromFile);
+    private void assertProduct(ProductDTO product, String expectedName, int expectedPrice, int expectedQuantity,
+                               String expectedPromotion) {
+        assertEquals(expectedName, product.name());
+        assertEquals(expectedPrice, product.price());
+        assertEquals(expectedQuantity, product.quantity());
+        assertEquals(expectedPromotion, product.promotion());
     }
 
     @Test

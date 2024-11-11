@@ -37,51 +37,67 @@ public class Products {
     }
 
     public void decreaseProductQuantityByName(String name, int quantity) {
-        Product promotionProduct = findProductsByName(name).get(true);
-        Product nonPromotionProduct = findProductsByName(name).get(false);
+        Map<Boolean, Product> productsByType = findProductsByName(name);
+        Product promotionProduct = productsByType.get(true);
+        Product nonPromotionProduct = productsByType.get(false);
 
+        quantity = decreasePromotionProductQuantity(promotionProduct, quantity);
+
+        if (isRemaining(quantity)) {
+            decreaseNonPromotionProductQuantity(nonPromotionProduct, quantity);
+        }
+    }
+
+    private int decreasePromotionProductQuantity(Product promotionProduct, int quantity) {
         if (promotionProduct != null) {
             int availablePromotionQuantity = promotionProduct.getQuantity();
             if (promotionProduct.hasEqualOrMoreQuantityThan(quantity)) {
                 promotionProduct.decreaseQuantity(quantity);
-                return;
+                return 0;
             }
             promotionProduct.decreaseQuantity(availablePromotionQuantity);
-            quantity -= availablePromotionQuantity;
+            return quantity - availablePromotionQuantity;
         }
+        return quantity;
+    }
 
-        if (isRemaining(quantity) && nonPromotionProduct.hasEqualOrMoreQuantityThan(quantity)) {
-                nonPromotionProduct.decreaseQuantity(quantity);
+    private void decreaseNonPromotionProductQuantity(Product nonPromotionProduct, int quantity) {
+        if (nonPromotionProduct.hasEqualOrMoreQuantityThan(quantity)) {
+            nonPromotionProduct.decreaseQuantity(quantity);
         }
     }
+
 
     private static boolean isRemaining(int quantity) {
         return quantity > MIN_QUANTITY;
     }
 
     private static List<Product> fromDTOs(List<ProductDTO> productDTOs) {
-        Map<String, List<ProductDTO>> productDTOsByName = productDTOs.stream()
+        Map<String, List<ProductDTO>> productDTOsByName = groupByProductName(productDTOs);
+
+        productDTOsByName.values().forEach(Products::ensureNonPromotionProduct);
+
+        return convertToProductList(productDTOsByName);
+    }
+
+    private static Map<String, List<ProductDTO>> groupByProductName(List<ProductDTO> productDTOs) {
+        return productDTOs.stream()
                 .collect(Collectors.groupingBy(ProductDTO::name));
+    }
 
-        productDTOsByName.values().forEach(products -> {
-            boolean hasNonPromotionProduct = products.stream()
-                    .anyMatch(productDTO -> productDTO.promotion() == null);
+    private static void ensureNonPromotionProduct(List<ProductDTO> products) {
+        if (products.stream()
+                .noneMatch(productDTO -> productDTO.promotion() == null)) {
+            ProductDTO productDTO = products.getFirst();
+            products.add(new ProductDTO(productDTO.name(), productDTO.price(), 0, null));
+        }
+    }
 
-            if (!hasNonPromotionProduct) {
-                ProductDTO productDTO = products.getFirst();
-                ProductDTO nonPromotionProductDTO = new ProductDTO(
-                        productDTO.name(),
-                        productDTO.price(),
-                        0,
-                        null
-                );
-                products.add(nonPromotionProductDTO);
-            }
-        });
-
+    private static List<Product> convertToProductList(Map<String, List<ProductDTO>> productDTOsByName) {
         return productDTOsByName.values().stream()
                 .flatMap(List::stream)
                 .map(Product::fromDTO)
                 .collect(Collectors.toUnmodifiableList());
     }
+
 }

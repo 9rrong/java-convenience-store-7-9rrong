@@ -38,69 +38,69 @@ class ApplicationTest extends NsTest {
 
     @Test
     void 상품_추가_권유_추가하지_않고_구매() {
-        assertNowTest(() -> {
+        assertSimpleTest(() -> {
             run("[탄산수-2]", "N", "N", "N");
             assertThat(output().replaceAll("\\s", "")).contains("행사할인0");
-        }, LocalDate.of(2024, 2, 1).atStartOfDay());
+        });
 
-        assertNowTest(() -> {
+        assertSimpleTest(() -> {
             run("[콜라-5]", "N", "N", "N");
             assertThat(output().replaceAll("\\s", "")).contains("행사할인1,000");
-        }, LocalDate.of(2024, 2, 1).atStartOfDay());
+        });
 
-        assertNowTest(() -> {
+        assertSimpleTest(() -> {
             run("[오렌지주스-3]", "N", "N", "N");
             assertThat(output().replaceAll("\\s", "")).contains("행사할인1,800");
-        }, LocalDate.of(2024, 2, 1).atStartOfDay());
+        });
     }
 
     @Test
     void 상품_추가_권유_추가하여_구매() {
-        assertNowTest(() -> {
+        assertSimpleTest(() -> {
             run("[탄산수-2]", "Y", "N", "N");
             assertThat(output().replaceAll("\\s", "")).contains("행사할인1,200");
-        }, LocalDate.of(2024, 2, 1).atStartOfDay());
+        });
 
-        assertNowTest(() -> {
+        assertSimpleTest(() -> {
             run("[콜라-5]", "Y", "N", "N");
             assertThat(output().replaceAll("\\s", "")).contains("행사할인2,000");
-        }, LocalDate.of(2024, 2, 1).atStartOfDay());
+        });
 
-        assertNowTest(() -> {
+        assertSimpleTest(() -> {
             run("[오렌지주스-3]", "Y", "N", "N");
             assertThat(output().replaceAll("\\s", "")).contains("행사할인3,600");
-        }, LocalDate.of(2024, 2, 1).atStartOfDay());
+        });
     }
 
     @Test
     void 프로모션_재고_부족_프로모션_적용_상품만_구매() {
-        assertNowTest(() -> {
+        assertSimpleTest(() -> {
             run("[탄산수-5]", "N", "N", "N");
             assertThat(output().replaceAll("\\s", "")).contains("내실돈2,400");
-        }, LocalDate.of(2024, 2, 1).atStartOfDay());
+        });
 
-        assertNowTest(() -> {
+        assertSimpleTest(() -> {
             run("[오렌지주스-9]", "N", "N", "N");
             assertThat(output().replaceAll("\\s", "")).contains("내실돈7,200");
-        }, LocalDate.of(2024, 2, 1).atStartOfDay());
+        });
 
-        assertNowTest(() -> {
+        assertSimpleTest(() -> {
             run("[초코바-10]", "N", "N", "N");
             assertThat(output().replaceAll("\\s", "")).contains("내실돈2,400");
-        }, LocalDate.of(2024, 2, 1).atStartOfDay());
+        });
     }
 
     @Test
     void 프로모션_재고_부족_전체_상품_구매() {
-        assertNowTest(() -> {
+        assertSimpleTest(() -> {
             run("[탄산수-5]", "Y", "N", "N");
             assertThat(output().replaceAll("\\s", "")).contains("내실돈4,800");
-        }, LocalDate.of(2024, 2, 1).atStartOfDay());
+        });
 
-        assertNowTest(() -> {
+        assertSimpleTest(() -> {
             run("[초코바-10]", "Y", "N", "N");
             assertThat(output().replaceAll("\\s", "")).contains("내실돈9,600");
-        }, LocalDate.of(2024, 2, 1).atStartOfDay());
+        });
     }
 
     @Test

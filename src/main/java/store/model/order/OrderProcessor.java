@@ -26,11 +26,7 @@ public class OrderProcessor {
         this.price = productWithNonPromotion.getPrice();
 
         if (productWithPromotion != null) {
-            this.price = productWithPromotion.getPrice();
-            this.promotion = promotions.findPromotionByName(productWithPromotion.getPromotion());
-            this.buy = promotion.getBuy();
-            this.get = promotion.getGet();
-            this.availableQuantity = productWithPromotion.getQuantity();
+            updatePromotionDetails(promotions);
         }
     }
 
@@ -85,6 +81,14 @@ public class OrderProcessor {
 
         int totalItemsWithPromotion = orderQuantity + get;
         return totalItemsWithPromotion <= availableQuantity;
+    }
+
+    private void updatePromotionDetails(Promotions promotions) {
+        this.price = productWithPromotion.getPrice();
+        this.promotion = promotions.findPromotionByName(productWithPromotion.getPromotion());
+        this.buy = promotion.getBuy();
+        this.get = promotion.getGet();
+        this.availableQuantity = productWithPromotion.getQuantity();
     }
 
     private int getMaxOrderPromotionGetQuantity() {

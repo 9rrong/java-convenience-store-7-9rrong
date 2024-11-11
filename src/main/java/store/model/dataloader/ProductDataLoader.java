@@ -6,6 +6,7 @@ import store.model.ErrorCode;
 public class ProductDataLoader extends AbstractDataLoader<ProductDTO> {
     private static final String DELIMITER = ",";
     private static final String EMPTY_VALUE_SIGN = "null";
+    public static final int PRODUCT_FORMAT_SIZE = 4;
 
     public ProductDataLoader(String filePath) {
         super(filePath);
@@ -14,18 +15,21 @@ public class ProductDataLoader extends AbstractDataLoader<ProductDTO> {
     @Override
     protected ProductDTO parseLine(String line) {
         String[] fields = line.split(DELIMITER);
-        if (fields.length == 4) {
-            String name = fields[0].trim();
-            int price = Integer.parseInt(fields[1].trim());
-            int quantity = Integer.parseInt(fields[2].trim());
-            String promotion = fields[3].trim();
+        validateFormat(fields);
 
-            if (EMPTY_VALUE_SIGN.equals(promotion)) {
-                promotion = null;
-            }
+        String promotion = fields[3].trim();
 
-            return new ProductDTO(name, price, quantity, promotion);
+        if (EMPTY_VALUE_SIGN.equals(promotion)) {
+            promotion = null;
         }
-        throw new IllegalArgumentException(ErrorCode.INVALID_INITIAL_DATA_FORMAT.getMessage());
+
+        return new ProductDTO(fields[0].trim(), Integer.parseInt(fields[1].trim()),
+                Integer.parseInt(fields[2].trim()), promotion);
+    }
+
+    private static void validateFormat(String[] fields) {
+        if (fields.length != PRODUCT_FORMAT_SIZE) {
+            throw new IllegalArgumentException(ErrorCode.INVALID_INITIAL_DATA_FORMAT.getMessage());
+        }
     }
 }

@@ -59,23 +59,28 @@ public class StoreController {
         List<ReceiptProductDTO> totalOrders = new ArrayList<>();
         List<ReceiptProductDTO> promotionOrders = new ArrayList<>();
 
-        for (OrderDTO orderDTO : orders.getOrderDTOs()) {
-            OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderDTO);
-
-            if (orderProcessor.promotionIsNotAvailable()) {
-                totalOrders.add(orderProcessor.getDefaultOrder());
-            }
-
-            if (!orderProcessor.promotionIsNotAvailable()) {
-                processOrderWithPromotion(orderProcessor, promotionOrders, totalOrders);
-            }
-        }
+        processOrderList(orders, totalOrders, promotionOrders);
 
         boolean applyMembershipDiscount = askMembershipDiscount();
         updateProducts(totalOrders);
 
         return new Receipt(totalOrders, promotionOrders, applyMembershipDiscount);
     }
+
+    private void processOrderList(Orders orders, List<ReceiptProductDTO> totalOrders,
+                                  List<ReceiptProductDTO> promotionOrders) {
+        for (OrderDTO orderDTO : orders.getOrderDTOs()) {
+            OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderDTO);
+
+            if (orderProcessor.promotionIsNotAvailable()) {
+                totalOrders.add(orderProcessor.getDefaultOrder());
+                continue;
+            }
+            processOrderWithPromotion(orderProcessor, promotionOrders, totalOrders);
+
+        }
+    }
+
 
     private void updateProducts(List<ReceiptProductDTO> totalOrders) {
         for (ReceiptProductDTO order : totalOrders) {

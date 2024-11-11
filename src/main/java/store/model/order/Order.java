@@ -29,17 +29,14 @@ public class Order {
     }
 
     private static void validateOrder(String productName, int quantity, List<ProductDTO> availableProducts) {
-        List<ProductDTO> filteredDTOs = availableProducts.stream()
+        int availableQuantity = availableProducts.stream()
                 .filter(p -> p.name().equals(productName))
-                .toList();
+                .mapToInt(ProductDTO::quantity)
+                .sum();
 
-        if (filteredDTOs.isEmpty()) {
+        if (availableQuantity == 0) {
             throw new NoSuchElementException(ErrorCode.PRODUCT_NOT_FOUND.getMessage());
         }
-
-        int availableQuantity = filteredDTOs
-                .stream()
-                .mapToInt(ProductDTO::quantity).sum();
 
         if (quantity > availableQuantity) {
             throw new IllegalArgumentException(ErrorCode.QUANTITY_EXCEEDS_STOCK.getMessage());

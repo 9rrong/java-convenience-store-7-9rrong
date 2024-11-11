@@ -14,6 +14,15 @@ public class Application {
     private static final String PROMOTIONS_FILE_PATH = "promotions.md";
 
     public static void main(String[] args) {
+        new Application().run();
+    }
+
+    private void run() {
+        StoreController storeController = initializeComponents();
+        storeController.operate();
+    }
+
+    private StoreController initializeComponents() {
         InputView inputView = new InputView();
         OutputView outputView = new OutputView();
         ProductDataLoader productDataLoader = new ProductDataLoader(PRODUCTS_FILE_PATH);
@@ -22,13 +31,7 @@ public class Application {
         Products products = Products.withLoader(productDataLoader);
         InputConverter inputConverter = new InputConverter();
 
-        StoreController storeController = new StoreController(
-                inputView,
-                outputView,
-                inputConverter,
-                products,
-                promotions
+        return new StoreController(inputView, outputView, inputConverter, products, promotions
         );
-        storeController.operate();
     }
 }

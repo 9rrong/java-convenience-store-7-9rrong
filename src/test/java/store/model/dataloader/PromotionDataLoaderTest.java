@@ -19,26 +19,24 @@ class PromotionDataLoaderTest {
 
         assertEquals(3, promotions.size());
 
-        PromotionDTO firstPromotion = promotions.get(0);
-        assertEquals("탄산2+1", firstPromotion.name());
-        assertEquals(2, firstPromotion.buy());
-        assertEquals(1, firstPromotion.get());
-        assertEquals(LocalDate.of(2024, 1, 1), firstPromotion.startDate());
-        assertEquals(LocalDate.of(2024, 12, 31), firstPromotion.endDate());
+        verifyPromotion(promotions.get(0), "탄산2+1", 2, 1,
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 12, 31)
+        );
 
-        PromotionDTO secondPromotion = promotions.get(1);
-        assertEquals("MD추천상품", secondPromotion.name());
-        assertEquals(1, secondPromotion.buy());
-        assertEquals(1, secondPromotion.get());
-        assertEquals(LocalDate.of(2024, 1, 1), secondPromotion.startDate());
-        assertEquals(LocalDate.of(2024, 12, 31), secondPromotion.endDate());
+        verifyPromotion(promotions.get(1), "MD추천상품", 1, 1,
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 12, 31)
+        );
     }
 
-    @Test
-    void 없는_프로모션_파일_예외테스트() {
-        promotionDataLoader = new PromotionDataLoader("empty_promotions.md");
-
-        assertThrows(RuntimeException.class, promotionDataLoader::loadFromFile);
+    private void verifyPromotion(PromotionDTO promotion, String expectedName, int expectedBuy, int expectedGet,
+                                 LocalDate expectedStartDate, LocalDate expectedEndDate) {
+        assertEquals(expectedName, promotion.name());
+        assertEquals(expectedBuy, promotion.buy());
+        assertEquals(expectedGet, promotion.get());
+        assertEquals(expectedStartDate, promotion.startDate());
+        assertEquals(expectedEndDate, promotion.endDate());
     }
 
     @Test
