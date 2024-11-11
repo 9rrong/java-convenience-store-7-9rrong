@@ -28,6 +28,22 @@ public class Product {
         return new ProductDTO(name, price, quantity, promotion);
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public String getPromotion() {
+        return promotion;
+    }
+
     public boolean hasName(String name) {
         return this.name.equals(name);
     }
@@ -36,22 +52,11 @@ public class Product {
         return this.promotion != null;
     }
 
-    public String getPromotion() {
-        return this.promotion;
-    }
-
-    public int getQuantity(){
-        return this.quantity;
-    }
-
-    public int getPrice(){return this.price;}
-
-    public void decreaseQuantity(int value){
+    public void decreaseQuantity(int value) {
         this.quantity -= value;
     }
 
     public boolean hasEqualOrMoreQuantityThan(int value) {
         return quantity >= value;
     }
-
 }

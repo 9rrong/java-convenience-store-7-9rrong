@@ -50,7 +50,7 @@ public class OrderProcessor {
         return new ReceiptProductDTO(productName, getOrderPromotionGetQuantity(), price);
     }
 
-    public ReceiptProductDTO getProductAddedTotalOrder(){
+    public ReceiptProductDTO getProductAddedTotalOrder() {
         return new ReceiptProductDTO(productName, orderQuantity + get, price);
     }
 
@@ -79,7 +79,6 @@ public class OrderProcessor {
     }
 
     public boolean isEligibleForFreeItems() {
-
         if (orderQuantity % (buy + get) != buy) {
             return false;
         }
@@ -100,7 +99,7 @@ public class OrderProcessor {
         return availableQuantity / (buy + get) * (get);
     }
 
-    private int getPromotionQuantity(){
+    private int getPromotionQuantity() {
         return availableQuantity / (buy + get) * (buy + get);
     }
 }

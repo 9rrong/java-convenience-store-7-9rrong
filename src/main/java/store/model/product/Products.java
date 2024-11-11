@@ -7,6 +7,8 @@ import store.dto.ProductDTO;
 import store.model.dataloader.AbstractDataLoader;
 
 public class Products {
+    private static final int MIN_QUANTITY = 0;
+
     private final List<Product> products;
 
     public Products(List<Product> products) {
@@ -48,11 +50,13 @@ public class Products {
             quantity -= availablePromotionQuantity;
         }
 
-        if (quantity > 0) {
-            if (nonPromotionProduct.hasEqualOrMoreQuantityThan(quantity)) {
+        if (isRemaining(quantity) && nonPromotionProduct.hasEqualOrMoreQuantityThan(quantity)) {
                 nonPromotionProduct.decreaseQuantity(quantity);
-            }
         }
+    }
+
+    private static boolean isRemaining(int quantity) {
+        return quantity > MIN_QUANTITY;
     }
 
     private static List<Product> fromDTOs(List<ProductDTO> productDTOs) {
@@ -64,10 +68,10 @@ public class Products {
                     .anyMatch(productDTO -> productDTO.promotion() == null);
 
             if (!hasNonPromotionProduct) {
-                ProductDTO firstProductDTO = products.getFirst();
+                ProductDTO productDTO = products.getFirst();
                 ProductDTO nonPromotionProductDTO = new ProductDTO(
-                        firstProductDTO.name(),
-                        firstProductDTO.price(),
+                        productDTO.name(),
+                        productDTO.price(),
                         0,
                         null
                 );

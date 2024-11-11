@@ -10,11 +10,14 @@ import store.view.InputView;
 import store.view.OutputView;
 
 public class Application {
+    private static final String PRODUCTS_FILE_PATH = "products.md";
+    private static final String PROMOTIONS_FILE_PATH = "promotions.md";
+
     public static void main(String[] args) {
         InputView inputView = new InputView();
         OutputView outputView = new OutputView();
-        ProductDataLoader productDataLoader = new ProductDataLoader("products.md");
-        PromotionDataLoader promotionDataLoader = new PromotionDataLoader("promotions.md");
+        ProductDataLoader productDataLoader = new ProductDataLoader(PRODUCTS_FILE_PATH);
+        PromotionDataLoader promotionDataLoader = new PromotionDataLoader(PROMOTIONS_FILE_PATH);
         Promotions promotions = Promotions.withLoaders(promotionDataLoader);
         Products products = Products.withLoader(productDataLoader);
         InputConverter inputConverter = new InputConverter();
@@ -26,7 +29,6 @@ public class Application {
                 products,
                 promotions
         );
-
         storeController.operate();
     }
 }

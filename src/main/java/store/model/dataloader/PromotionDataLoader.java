@@ -3,9 +3,10 @@ package store.model.dataloader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import store.dto.PromotionDTO;
+import store.model.ErrorCode;
 
 public class PromotionDataLoader extends AbstractDataLoader<PromotionDTO> {
-
+    private static final String DELIMITER = ",";
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public PromotionDataLoader(String filePath) {
@@ -14,7 +15,7 @@ public class PromotionDataLoader extends AbstractDataLoader<PromotionDTO> {
 
     @Override
     protected PromotionDTO parseLine(String line) {
-        String[] fields = line.split(",");
+        String[] fields = line.split(DELIMITER);
         if (fields.length == 5) {
             String name = fields[0].trim();
             int buy = Integer.parseInt(fields[1].trim());
@@ -24,6 +25,6 @@ public class PromotionDataLoader extends AbstractDataLoader<PromotionDTO> {
 
             return new PromotionDTO(name, buy, get, startDate, endDate);
         }
-        throw new IllegalArgumentException("[ERROR] 초기 데이터가 잘못된 형식입니다.");
+        throw new IllegalArgumentException(ErrorCode.INVALID_INITIAL_DATA_FORMAT.getMessage());
     }
 }

@@ -3,8 +3,10 @@ package store.model;
 import java.util.ArrayList;
 import java.util.List;
 import store.dto.ReceiptProductDTO;
+import store.view.OutputView;
 
 public class Receipt {
+
     private final List<ReceiptProductDTO> totalOrders;
     private final List<ReceiptProductDTO> promotionOrders;
     boolean applyMembershipDiscount;
@@ -23,8 +25,8 @@ public class Receipt {
         int promotionDiscount = 0;
         int membershipDiscount = 0;
 
-        receipt.add("==============W 편의점================");
-        receipt.add(String.format("%-20s%-10s%-15s", "상품명", "수량", "금액"));
+        receipt.add(OutputView.RECEIPT_STORE_NAME);
+        receipt.add(String.format(OutputView.RECEIPT_HEADER_FORMAT, "상품명", "수량", "금액"));
 
         for (ReceiptProductDTO receiptProductDTO : totalOrders) {
             int productPrice = receiptProductDTO.price();
@@ -32,28 +34,28 @@ public class Receipt {
             totalAmount += totalOrderAmount;
             totalQuantity += receiptProductDTO.quantity();
 
-            receipt.add(String.format("%-20s%,-10d%,-15d", receiptProductDTO.name(), receiptProductDTO.quantity(), totalOrderAmount));
+            receipt.add(String.format(OutputView.RECEIPT_PRODUCT_FORMAT, receiptProductDTO.name(), receiptProductDTO.quantity(), totalOrderAmount));
         }
 
-        receipt.add("=============증\t    정===============");
+        receipt.add(OutputView.RECEIPT_PROMOTION_HEADER);
 
         for (ReceiptProductDTO promotionOrder : promotionOrders) {
             int promotionAmount = promotionOrder.quantity() * promotionOrder.price();
             promotionDiscount += promotionAmount;
-            receipt.add(String.format("%-20s%,-10d", promotionOrder.name(), promotionOrder.quantity()));
+            receipt.add(String.format(OutputView.RECEIPT_PRODUCT_FORMAT, promotionOrder.name(), promotionOrder.quantity(), 0)); // No amount for promotion
         }
 
         if (applyMembershipDiscount) {
             membershipDiscount = (int) ((totalAmount - promotionDiscount) * 0.3);
         }
 
-        receipt.add("====================================");
-        receipt.add(String.format("%-20s%,-10d%,-15d", "총구매액", totalQuantity, totalAmount));
-        receipt.add(String.format("%-30s%,-10d","행사할인", promotionDiscount));
-        receipt.add(String.format("%-30s%,-10d","멤버십할인", membershipDiscount));
+        receipt.add(OutputView.RECEIPT_PARTITION_LINE);
+        receipt.add(String.format(OutputView.RECEIPT_PRODUCT_FORMAT, OutputView.RECEIPT_TOTAL_LABEL, totalQuantity, totalAmount));
+        receipt.add(String.format(OutputView.RECEIPT_FOOTER_FORMAT, OutputView.RECEIPT_DISCOUNT_LABEL, promotionDiscount));
+        receipt.add(String.format(OutputView.RECEIPT_FOOTER_FORMAT, OutputView.RECEIPT_MEMBERSHIP_DISCOUNT_LABEL, membershipDiscount));
 
         int finalAmount = totalAmount - promotionDiscount - membershipDiscount;
-        receipt.add(String.format("%-30s%,-10d", "내실돈", finalAmount));
+        receipt.add(String.format(OutputView.RECEIPT_FOOTER_FORMAT, OutputView.RECEIPT_FINAL_AMOUNT_LABEL, finalAmount));
 
         return receipt;
     }

@@ -26,8 +26,7 @@ public class StoreController {
                            OutputView outputView,
                            InputConverter inputConverter,
                            Products products,
-                           Promotions promotions
-    ) {
+                           Promotions promotions) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.inputConverter = inputConverter;
@@ -37,7 +36,7 @@ public class StoreController {
 
     public void operate() {
         boolean operate = true;
-        while(operate) {
+        while (operate) {
             outputView.printGreeting();
             List<ProductDTO> productDTOs = products.toDTOs();
             outputView.printProducts(productDTOs);
@@ -82,7 +81,6 @@ public class StoreController {
         for (ReceiptProductDTO order : totalOrders) {
             String productName = order.name();
             int quantityToDeduct = order.quantity();
-
             products.decreaseProductQuantityByName(productName, quantityToDeduct);
         }
     }
