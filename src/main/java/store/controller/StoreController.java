@@ -100,9 +100,10 @@ public class StoreController {
                                          List<ReceiptProductDTO> totalOrders) {
         if (orderProcessor.isEligibleForFreeItems()) {
             handleFreeItemsPromotion(orderProcessor, promotionOrders, totalOrders);
+            return;
         }
         totalOrders.add(orderProcessor.getDefaultOrder());
-        promotionOrders.add(orderProcessor.getDefaultOrder());
+        promotionOrders.add(orderProcessor.getPromotionOrder());
     }
 
     private void handleNonEligiblePromotion(OrderProcessor orderProcessor, List<ReceiptProductDTO> promotionOrders,
@@ -111,9 +112,9 @@ public class StoreController {
         boolean buyOnlyPromotionProduct = askBuyOnlyPromotionProduct(orderProcessor.getProductName(),
                 nonPromotionQuantity);
 
-        promotionOrders.add(orderProcessor.getPromotionOrder());
+        promotionOrders.add(orderProcessor.getPromotionGetOrder());
 
-        if (buyOnlyPromotionProduct) {
+        if (!buyOnlyPromotionProduct) {
             totalOrders.add(orderProcessor.getPromotionOrder());
             return;
         }
@@ -123,13 +124,14 @@ public class StoreController {
 
     private void handleFreeItemsPromotion(OrderProcessor orderProcessor, List<ReceiptProductDTO> promotionOrders,
                                           List<ReceiptProductDTO> totalOrders) {
-        totalOrders.add(orderProcessor.getDefaultOrder());
 
         if (askAddPromotionProduct(orderProcessor.getProductName())) {
-            promotionOrders.add(orderProcessor.getPromotionAddedOrder());
+            promotionOrders.add(orderProcessor.getProductAddedPromotionOrder());
+            totalOrders.add(orderProcessor.getProductAddedTotalOrder());
             return;
         }
-        promotionOrders.add(orderProcessor.getPromotionOrder());
+        totalOrders.add(orderProcessor.getDefaultOrder());
+        promotionOrders.add(orderProcessor.getDefaultPromotionOrder());
     }
 
     private boolean askAddPromotionProduct(String productName) {

@@ -17,7 +17,6 @@ public class OrderProcessor {
     private int buy;
     private int get;
     private int availableQuantity;
-    private int promotionProductQuantity;
 
     public OrderProcessor(Products products, Promotions promotions, OrderDTO orderDTO) {
         this.productName = orderDTO.productName();
@@ -32,7 +31,6 @@ public class OrderProcessor {
             this.buy = promotion.getBuy();
             this.get = promotion.getGet();
             this.availableQuantity = productWithPromotion.getQuantity();
-            this.promotionProductQuantity = getMaxPromotionQuantity();
         }
     }
 
@@ -44,12 +42,28 @@ public class OrderProcessor {
         return new ReceiptProductDTO(productName, orderQuantity, price);
     }
 
+    public ReceiptProductDTO getProductAddedPromotionOrder() {
+        return new ReceiptProductDTO(productName, getOrderPromotionGetQuantity() + get, price);
+    }
+
+    public ReceiptProductDTO getDefaultPromotionOrder() {
+        return new ReceiptProductDTO(productName, getOrderPromotionGetQuantity(), price);
+    }
+
+    public ReceiptProductDTO getProductAddedTotalOrder(){
+        return new ReceiptProductDTO(productName, orderQuantity + get, price);
+    }
+
     public ReceiptProductDTO getPromotionAddedOrder() {
-        return new ReceiptProductDTO(productName, promotionProductQuantity + get, price);
+        return new ReceiptProductDTO(productName, getPromotionGetQuantity() + get, price);
     }
 
     public ReceiptProductDTO getPromotionOrder() {
-        return new ReceiptProductDTO(productName, promotionProductQuantity, price);
+        return new ReceiptProductDTO(productName, getPromotionQuantity(), price);
+    }
+
+    public ReceiptProductDTO getPromotionGetOrder() {
+        return new ReceiptProductDTO(productName, getPromotionGetQuantity(), price);
     }
 
     public String getProductName() {
@@ -57,11 +71,11 @@ public class OrderProcessor {
     }
 
     public int getNonPromotionProductQuantity() {
-        return orderQuantity - availableQuantity;
+        return orderQuantity - getPromotionQuantity();
     }
 
     public boolean promotionProductIsEnough() {
-        return orderQuantity <= availableQuantity;
+        return getMaxOrderPromotionGetQuantity() <= getPromotionGetQuantity();
     }
 
     public boolean isEligibleForFreeItems() {
@@ -74,7 +88,19 @@ public class OrderProcessor {
         return totalItemsWithPromotion <= availableQuantity;
     }
 
-    private int getMaxPromotionQuantity() {
+    private int getMaxOrderPromotionGetQuantity() {
+        return orderQuantity / (buy) * (get);
+    }
+
+    private int getOrderPromotionGetQuantity() {
+        return orderQuantity / (buy + get) * (get);
+    }
+
+    private int getPromotionGetQuantity() {
+        return availableQuantity / (buy + get) * (get);
+    }
+
+    private int getPromotionQuantity(){
         return availableQuantity / (buy + get) * (buy + get);
     }
 }

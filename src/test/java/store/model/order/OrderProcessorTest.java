@@ -13,100 +13,96 @@ import store.model.promotion.Promotions;
 
 public class OrderProcessorTest {
 
-    private ProductDataLoader productDataLoader;
-    private PromotionDataLoader promotionDataLoader;
     private Products products;
     private Promotions promotions;
 
-    private OrderDTO orderDTO;
-
     @BeforeEach
     public void setUp() {
-        productDataLoader = new ProductDataLoader("products.md");
-        promotionDataLoader = new PromotionDataLoader("promotions.md");
+        ProductDataLoader productDataLoader = new ProductDataLoader("products.md");
+        PromotionDataLoader promotionDataLoader = new PromotionDataLoader("promotions.md");
 
         products = Products.withLoader(productDataLoader);
         promotions = Promotions.withLoaders(promotionDataLoader);
     }
 
     @Test
-    public void 프로모션이_없을_때_프로모션이_적용되지_않는지_확인() {
-        OrderDTO orderDTOWithoutPromotion = new OrderDTO("물", 5);
-        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderDTOWithoutPromotion);
+    public void 프로모션_없는_상품_주문_테스트() {
+        OrderDTO orderWithoutPromotion = new OrderDTO("물", 5);
+        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderWithoutPromotion);
 
         assertThat(orderProcessor.promotionIsNotAvailable()).isTrue();
     }
 
     @Test
-    public void 프로모션이_있을_때_프로모션이_적용되는지_확인() {
-        orderDTO = new OrderDTO("콜라", 10);
-        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderDTO);
+    public void 프로모션_있는_상품_주문_테스트() {
+        OrderDTO orderWithPromotion = new OrderDTO("콜라", 10);
+        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderWithPromotion);
 
         assertThat(orderProcessor.promotionIsNotAvailable()).isFalse();
     }
 
     @Test
-    public void 프로모션_추가된_주문_수량_확인() {
-        orderDTO = new OrderDTO("콜라", 10);
-        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderDTO);
+    public void 프로모션_추가된_상품_주문_수량_테스트() {
+        OrderDTO orderWithPromotion = new OrderDTO("콜라", 10);
+        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderWithPromotion);
 
-        assertThat(orderProcessor.getPromotionAddedOrder().quantity()).isEqualTo(10);
+        assertThat(orderProcessor.getPromotionAddedOrder().quantity()).isEqualTo(4);
     }
 
     @Test
-    public void 프로모션_주문_수량_확인() {
-        orderDTO = new OrderDTO("콜라", 10);
-        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderDTO);
+    public void 프로모션_적용된_주문_수량_테스트() {
+        OrderDTO orderWithPromotion = new OrderDTO("콜라", 10);
+        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderWithPromotion);
 
         assertThat(orderProcessor.getPromotionOrder().quantity()).isEqualTo(9);
     }
 
     @Test
-    public void 프로모션_적용되지_않은_상품_수량_확인() {
-        orderDTO = new OrderDTO("콜라", 10);
-        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderDTO);
+    public void 프로모션_미적용_상품_수량_테스트() {
+        OrderDTO orderWithPromotion = new OrderDTO("콜라", 10);
+        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderWithPromotion);
 
-        assertThat(orderProcessor.getNonPromotionProductQuantity()).isEqualTo(0);
+        assertThat(orderProcessor.getNonPromotionProductQuantity()).isEqualTo(1);
     }
 
     @Test
-    public void 무료_상품_자격_확인() {
-        orderDTO = new OrderDTO("콜라", 10);
-        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderDTO);
+    public void 무료_상품_자격_조건_테스트() {
+        OrderDTO orderWithPromotion = new OrderDTO("콜라", 10);
+        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderWithPromotion);
 
         assertThat(orderProcessor.isEligibleForFreeItems()).isFalse();
     }
 
     @Test
-    public void 기본_주문_확인() {
-        orderDTO = new OrderDTO("콜라", 10);
-        ReceiptProductDTO receiptProductDTO = new ReceiptProductDTO("콜라",10,1000);
-        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderDTO);
+    public void 기본_주문_생성_테스트() {
+        OrderDTO orderWithPromotion = new OrderDTO("콜라", 10);
+        ReceiptProductDTO expectedReceipt = new ReceiptProductDTO("콜라", 10, 1000);
+        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderWithPromotion);
 
-        assertThat(orderProcessor.getDefaultOrder()).isEqualTo(receiptProductDTO);
+        assertThat(orderProcessor.getDefaultOrder()).isEqualTo(expectedReceipt);
     }
 
     @Test
-    public void 프로모션_상품_수량_충분한지_확인() {
-        orderDTO = new OrderDTO("콜라", 10);
-        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderDTO);
+    public void 프로모션_적용_상품_재고_충분성_테스트() {
+        OrderDTO orderWithPromotion = new OrderDTO("콜라", 10);
+        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderWithPromotion);
 
-        assertThat(orderProcessor.promotionProductIsEnough()).isTrue();
+        assertThat(orderProcessor.promotionProductIsEnough()).isFalse();
     }
 
     @Test
-    public void 다른_제품에_대한_주문_확인() {
-        OrderDTO orderDTOForSoda = new OrderDTO("사이다", 7);
-        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderDTOForSoda);
+    public void 다른_제품_주문_테스트() {
+        OrderDTO orderForSoda = new OrderDTO("사이다", 7);
+        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderForSoda);
 
         assertThat(orderProcessor.getPromotionOrder().quantity()).isEqualTo(6);
         assertThat(orderProcessor.promotionIsNotAvailable()).isFalse();
     }
 
     @Test
-    public void 부분_프로모션_적용_주문_확인() {
-        OrderDTO orderDTOForSoda = new OrderDTO("탄산수", 5);
-        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderDTOForSoda);
+    public void 부분_프로모션_적용된_주문_수량_테스트() {
+        OrderDTO orderForSparklingWater = new OrderDTO("탄산수", 5);
+        OrderProcessor orderProcessor = new OrderProcessor(products, promotions, orderForSparklingWater);
 
         assertThat(orderProcessor.getPromotionOrder().quantity()).isEqualTo(3);
     }

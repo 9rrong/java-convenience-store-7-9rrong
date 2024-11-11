@@ -38,6 +38,48 @@ class ApplicationTest extends NsTest {
     }
 
     @Test
+    void 상품_추가_권유_추가하지_않고_구매() {
+        assertNowTest(() -> {
+            run("[탄산수-2]", "N", "N", "N");
+            assertThat(output().replaceAll("\\s", "")).contains("행사할인0");
+        }, LocalDate.of(2024, 2, 1).atStartOfDay());
+
+        assertNowTest(() -> {
+            run("[콜라-5]", "N", "N", "N");
+            assertThat(output().replaceAll("\\s", "")).contains("행사할인1,000");
+        }, LocalDate.of(2024, 2, 1).atStartOfDay());
+    }
+
+    @Test
+    void 상품_추가_권유_추가하여_구매() {
+        assertNowTest(() -> {
+            run("[탄산수-2]", "Y", "N", "N");
+            assertThat(output().replaceAll("\\s", "")).contains("행사할인1,200");
+        }, LocalDate.of(2024, 2, 1).atStartOfDay());
+
+        assertNowTest(() -> {
+            run("[콜라-5]", "Y", "N", "N");
+            assertThat(output().replaceAll("\\s", "")).contains("행사할인2,000");
+        }, LocalDate.of(2024, 2, 1).atStartOfDay());
+    }
+
+    @Test
+    void 프로모션_재고_부족_프로모션_적용_상품만_구매() {
+        assertNowTest(() -> {
+            run("[탄산수-5]", "N", "N", "N");
+            assertThat(output().replaceAll("\\s", "")).contains("내실돈2,400");
+        }, LocalDate.of(2024, 2, 1).atStartOfDay());
+    }
+
+    @Test
+    void 프로모션_재고_부족_전체_상품_구매() {
+        assertNowTest(() -> {
+            run("[탄산수-5]", "Y", "N", "N");
+            assertThat(output().replaceAll("\\s", "")).contains("내실돈4,800");
+        }, LocalDate.of(2024, 2, 1).atStartOfDay());
+    }
+
+    @Test
     void 여러_개의_일반_상품_구매() {
         assertSimpleTest(() -> {
             run("[비타민워터-3],[물-2],[정식도시락-2]", "N", "N");
